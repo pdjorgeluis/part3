@@ -3,6 +3,9 @@ const app = express()
 
 app.use(express.json())
 
+const cors = require('cors')
+app.use(cors())
+
 let notes = [
     {
       id: 1,
@@ -65,13 +68,17 @@ app.post('/api/notes', (request, response) => {
         important: Boolean(body.important) || false,
         id: generateId(),
     }
-    
+
     notes = notes.concat(note)
     
     response.json(note);
 })
+
+const unknownEndPoint = (request, response) => {
+    response.status(404).send({error: 'unknown endpoint'})
+}
   
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on PORT ${PORT}`);
 })
